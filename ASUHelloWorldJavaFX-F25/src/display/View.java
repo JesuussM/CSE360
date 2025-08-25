@@ -1,5 +1,9 @@
 package display;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -9,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import userContext.UserContext;
 
 /*******
  * <p> Title: View Class - establishes the Graphics User interface, presents information to the
@@ -40,7 +45,11 @@ public class View {
 	static private Model theModel = null;
 	static private Controller theController = null;
 	double WINDOW_WIDTH = asuHelloWorldJavaFX.ASUHelloWorldJavaFX.WINDOW_WIDTH;	
-	double WINDOW_HEIGHT = asuHelloWorldJavaFX.ASUHelloWorldJavaFX.WINDOW_HEIGHT;	
+	double WINDOW_HEIGHT = asuHelloWorldJavaFX.ASUHelloWorldJavaFX.WINDOW_HEIGHT;
+	
+	// Roles Testing
+	private List<String> myRoles = Arrays.asList("User", "Admin");
+    public UserContext user = new UserContext("Jesus", myRoles);
 
 	/*
 	 * The Label object that holds the text use to tell the user the current number of times the
@@ -124,9 +133,23 @@ public class View {
         	}
         });
         
+        if (HasAdminAccess())
+        {
+        	Button editBtn = new Button();
+        	editBtn.setText("Admin Test");
+        	editBtn.setMinWidth(200);
+        	editBtn.setAlignment(Pos.CENTER);
+        	editBtn.setLayoutX(50);
+        	editBtn.setLayoutY(150);	
+        	theRoot.getChildren().add(editBtn);
+        }
+        
         // Create the list of GUI elements and use it to populate the window Pane with widgets
         theRoot.getChildren().add(lblNumberClicks);
         theRoot.getChildren().add(btn);
+        
+        
+        
 	}
 
 	/*******
@@ -140,5 +163,10 @@ public class View {
 	public void updateNumberClicks() {
 		lblNumberClicks.setText("Number of Clicks: " + theModel.getCurrentCounterVaue());
 	}
-
+	
+	public boolean HasAdminAccess() {
+		
+		return (user.Roles.contains("Admin"));
+		
+	}
 }

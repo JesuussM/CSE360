@@ -90,7 +90,7 @@ public class ASUHelloWorldJavaFX extends Application {
 		// Display console messages to inform the user that the application is actually running.
     	System.out.println("ASU Hello World!");
     	System.out.println("It started!");
-    	System.out.println("***Mac Git Test****");
+    	
 
     	// Setup the graphical elements for the initial GUI window.
       	View.getView(primaryStage);
