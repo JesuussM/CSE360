@@ -133,14 +133,27 @@ public class View {
         	}
         });
         
+        // Using page's method
         if (HasAdminAccess())
         {
         	Button editBtn = new Button();
-        	editBtn.setText("Admin Test");
+        	editBtn.setText("Admin Page Check Test");
         	editBtn.setMinWidth(200);
         	editBtn.setAlignment(Pos.CENTER);
         	editBtn.setLayoutX(50);
         	editBtn.setLayoutY(150);	
+        	theRoot.getChildren().add(editBtn);
+        }
+        
+        // Using UserContext method
+        if (UserContext.HasAdminAccess(user))
+        {
+        	Button editBtn = new Button();
+        	editBtn.setText("Admin Universal Check Test");
+        	editBtn.setMinWidth(200);
+        	editBtn.setAlignment(Pos.CENTER);
+        	editBtn.setLayoutX(50);
+        	editBtn.setLayoutY(200);	
         	theRoot.getChildren().add(editBtn);
         }
         
@@ -162,9 +175,9 @@ public class View {
 		lblNumberClicks.setText("Number of Clicks: " + theModel.getCurrentCounterVaue());
 	}
 	
+	// Can be placed in page for page by page needs
+	// Meaning each page has to have their own method
 	public boolean HasAdminAccess() {
-		
 		return (user.Roles.contains("Admin"));
-		
 	}
 }

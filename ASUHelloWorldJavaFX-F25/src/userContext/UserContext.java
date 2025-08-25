@@ -11,4 +11,9 @@ public class UserContext {
 		this.Username = name;
 		this.Roles = roles;
 	}
+	
+	// Can be placed here to be used universally in other pages
+	public static boolean HasAdminAccess(UserContext user) {
+		return (user.Roles.contains("Admin"));
+	}
 }
