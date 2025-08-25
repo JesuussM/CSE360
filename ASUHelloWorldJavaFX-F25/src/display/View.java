@@ -148,8 +148,6 @@ public class View {
         theRoot.getChildren().add(lblNumberClicks);
         theRoot.getChildren().add(btn);
         
-        
-        
 	}
 
 	/*******
