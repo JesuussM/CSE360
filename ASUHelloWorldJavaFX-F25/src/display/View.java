@@ -1,9 +1,5 @@
 package display;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -46,16 +42,13 @@ public class View {
 	static private Controller theController = null;
 	double WINDOW_WIDTH = asuHelloWorldJavaFX.ASUHelloWorldJavaFX.WINDOW_WIDTH;	
 	double WINDOW_HEIGHT = asuHelloWorldJavaFX.ASUHelloWorldJavaFX.WINDOW_HEIGHT;
-	
-	// Roles Testing
-	private List<String> myRoles = Arrays.asList("User", "Admin");
-    public UserContext user = new UserContext("Jesus", myRoles);
 
 	/*
 	 * The Label object that holds the text use to tell the user the current number of times the
 	 * button has been clicked.
 	 */
 	private Label lblNumberClicks = new Label("Number of Clicks: 0");
+	private Label lblUserTest = new Label("Hello " + UserContext.User.Username + "!");
 	
 	/*******
 	 * <p> Title: View - Default Constructor </p>
@@ -119,6 +112,17 @@ public class View {
 		lblNumberClicks.setAlignment(Pos.CENTER);			// width so centering will place it
 		lblNumberClicks.setLayoutX(0);						// centered in the window,
 		lblNumberClicks.setLayoutY(50);						// Place it 50 pixels from the top
+		
+		if (UserContext.User.HasUserAccess())
+		{
+			lblUserTest.setFont(Font.font("Arial", 18));
+			lblUserTest.setMinWidth(300);
+			lblUserTest.setAlignment(Pos.CENTER);
+			lblUserTest.setLayoutX(0);
+			lblUserTest.setLayoutY(25);
+			theRoot.getChildren().add(lblUserTest);
+
+		}
 
 		// Set the various attributes for the button that appears below the text
 		Button btn = new Button();							// Create the button and label it so
@@ -133,27 +137,14 @@ public class View {
         	}
         });
         
-        // Using page's method
-        if (HasAdminAccess())
+        if (UserContext.User.HasAdminAccess())
         {
         	Button editBtn = new Button();
-        	editBtn.setText("Admin Page Check Test");
+        	editBtn.setText("Admin Button");
         	editBtn.setMinWidth(200);
         	editBtn.setAlignment(Pos.CENTER);
         	editBtn.setLayoutX(50);
         	editBtn.setLayoutY(150);	
-        	theRoot.getChildren().add(editBtn);
-        }
-        
-        // Using UserContext method
-        if (UserContext.HasAdminAccess(user))
-        {
-        	Button editBtn = new Button();
-        	editBtn.setText("Admin Universal Check Test");
-        	editBtn.setMinWidth(200);
-        	editBtn.setAlignment(Pos.CENTER);
-        	editBtn.setLayoutX(50);
-        	editBtn.setLayoutY(200);	
         	theRoot.getChildren().add(editBtn);
         }
         
@@ -173,11 +164,5 @@ public class View {
 	
 	public void updateNumberClicks() {
 		lblNumberClicks.setText("Number of Clicks: " + theModel.getCurrentCounterVaue());
-	}
-	
-	// Can be placed in page for page by page needs
-	// Meaning each page has to have their own method
-	public boolean HasAdminAccess() {
-		return (user.Roles.contains("Admin"));
 	}
 }
