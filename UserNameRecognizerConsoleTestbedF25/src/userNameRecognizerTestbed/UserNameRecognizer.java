@@ -107,13 +107,12 @@ public class UserNameRecognizer {
 			case 0: 
 				// State 0 has 1 valid transition that is addressed by an if statement.
 				
-				// The current character is checked against A-Z, a-z, 0-9. If any are matched
+				// The current character is checked against A-Z, a-z. If any are matched
 				// the FSM goes to state 1
 				
-				// A-Z, a-z, 0-9 -> State 1
+				// A-Z, a-z -> State 1
 				if ((currentChar >= 'A' && currentChar <= 'Z' ) ||		// Check for A-Z
-						(currentChar >= 'a' && currentChar <= 'z' ) ||	// Check for a-z
-						(currentChar >= '0' && currentChar <= '9' )) {	// Check for 0-9
+						(currentChar >= 'a' && currentChar <= 'z' )) {	// Check for a-z
 					nextState = 1;
 					
 					// Count the character 
@@ -144,8 +143,10 @@ public class UserNameRecognizer {
 					// Count the character
 					userNameSize++;
 				}
-				// . -> State 2
-				else if (currentChar == '.') {							// Check for /
+				// -,_,. -> State 2
+				else if ((currentChar == '-') ||						// Check for -
+							(currentChar == '_') ||						// Check for _
+							(currentChar == '.')) {						// Check for .
 					nextState = 2;
 					
 					// Count the .
@@ -221,7 +222,7 @@ public class UserNameRecognizer {
 		switch (state) {
 		case 0:
 			// State 0 is not a final state, so we can return a very specific error message
-			userNameRecognizerErrorMessage += "A UserName must start with A-Z, a-z, or 0-9.\n";
+			userNameRecognizerErrorMessage += "A UserName must start with A-Z or a-z\n";
 			return userNameRecognizerErrorMessage;
 
 		case 1:
@@ -255,7 +256,7 @@ public class UserNameRecognizer {
 		case 2:
 			// State 2 is not a final state, so we can return a very specific error message
 			userNameRecognizerErrorMessage +=
-				"A UserName character after a period must be A-Z, a-z, 0-9.\n";
+				"A UserName character after a special character must be A-Z, a-z, 0-9.\n";
 			return userNameRecognizerErrorMessage;
 			
 		default:
