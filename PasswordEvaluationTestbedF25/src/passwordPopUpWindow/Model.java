@@ -115,6 +115,7 @@ public class Model {
 	public static boolean foundNumericDigit = false;
 	public static boolean foundSpecialChar = false;
 	public static boolean foundLongEnough = false;
+	public static boolean foundShortEnough = false;
 	private static String inputLine = "";				// The input line
 	private static char currentChar;					// The current character in the line
 	private static int currentCharNdx;					// The index of the current character
@@ -170,6 +171,11 @@ public class Model {
 			View.label_LongEnough.setText("At least eight characters - Satisfied");
 			View.label_LongEnough.setTextFill(Color.GREEN);
 		}
+		
+		if (foundShortEnough) {
+			View.label_ShortEnough.setText("At most thirty-two characters - Satisfied");
+			View.label_ShortEnough.setTextFill(Color.GREEN);
+		}
 	}
 	
 
@@ -213,6 +219,7 @@ public class Model {
 		foundSpecialChar = false;			// Reset the Boolean flag
 		foundNumericDigit = false;			// Reset the Boolean flag
 		foundLongEnough = false;			// Reset the Boolean flag
+		foundShortEnough = false;			// Reset the Boolean flag
 		
 		// This flag determines whether the directed graph (FSM) loop is operating or not
 		running = true;						// Start the loop
@@ -243,6 +250,13 @@ public class Model {
 				System.out.println("At least 8 characters found");
 				foundLongEnough = true;
 			}
+			if (currentCharNdx <= 31) {
+				System.out.println("At Most 32 characters found");
+				foundShortEnough = true;
+			} else
+			{
+				foundShortEnough = false;
+			}
 			
 			// Go to the next character if there is one
 			currentCharNdx++;
@@ -270,6 +284,9 @@ public class Model {
 			
 		if (!foundLongEnough)
 			errMessage += "Long Enough; ";
+		
+		if (!foundShortEnough)
+			errMessage += "Too Long; ";
 		
 		if (errMessage == "")
 			return "";

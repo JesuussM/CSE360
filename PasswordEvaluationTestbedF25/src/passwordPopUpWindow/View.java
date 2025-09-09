@@ -76,6 +76,7 @@ public class View {
 	static protected Label label_NumericDigit = new Label();	
 	static protected Label label_SpecialChar = new Label();
 	static protected Label label_LongEnough = new Label();
+	static protected Label label_ShortEnough = new Label();
 
     /* 
 	 * Button to finish the process.  It only become active when all the requirements have been met
@@ -197,12 +198,15 @@ public class View {
 	    setupLabelWidget(label_LongEnough, 30, 300, "Arial", 14, windowWidth-10, 
 				Pos.BASELINE_LEFT);
 	    
+	    setupLabelWidget(label_ShortEnough, 30, 330, "Arial", 14, windowWidth-10, 
+				Pos.BASELINE_LEFT);
+	    
 		resetAssessments();	// This method is use after each change to establish an initial state
 		
 		// Setup the valid Password message, which is used when all the requirements have been met
 		validPassword.setTextFill(Color.GREEN);
 		validPassword.setAlignment(Pos.BASELINE_RIGHT);
-		setupLabelWidget(validPassword, 10, 340, "Arial", 18, windowWidth-150-10, 
+		setupLabelWidget(validPassword, 10, 350, "Arial", 18, windowWidth-150-10, 
 				Pos.BASELINE_LEFT);
 		
 		// Setup the Finish and Save The Password button
@@ -220,7 +224,7 @@ public class View {
 		theRoot.getChildren().addAll(label_Password, text_Password, noInputFound, 
 				label_errPassword, errPassword, errPasswordPart3, validPassword,
 				label_Requirements, label_UpperCase, label_LowerCase, label_NumericDigit,
-				label_SpecialChar, label_LongEnough, button_Finish);
+				label_SpecialChar, label_LongEnough, label_ShortEnough, button_Finish);
 	}
 	
 	/*******
@@ -263,6 +267,9 @@ public class View {
 	    
 	    label_LongEnough.setText("At least eight characters - Not yet satisfied");
 	    label_LongEnough.setTextFill(Color.RED);
+	    
+	    label_ShortEnough.setText("At most thirty-two characters - Not yet satisfied");
+	    label_ShortEnough.setTextFill(Color.RED);
 	}
 
 	
