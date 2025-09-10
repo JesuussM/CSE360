@@ -8,10 +8,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-
 
 /*******
  * <p> Title: ViewFirstAdmin Class</p>
@@ -60,10 +63,41 @@ public class ViewFirstAdmin {
 	protected static TextField text_AdminUsername = new TextField();
 	protected static PasswordField text_AdminPassword1 = new PasswordField();
 	protected static PasswordField text_AdminPassword2 = new PasswordField();
-	private static Button button_AdminSetup = new Button("Setup Admin Account");
+	protected static Button button_AdminSetup = new Button("Setup Admin Account");
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
+	
+	/* 
+	 * Feedback labels to show the user where the error is located.  For this application, the
+	 * errors are ones of omission, so the "error" is always at the end of the input (e.g., a
+	 * password must have an upper case letter.  If the current input does not include an upper 
+	 * case character, this can be corrected by adding one.  We so this at the end, but in 
+	 * reality, the upper case could be anywhere in the password.
+	 * 
+	 */
+	static protected Label label_errUsername = new Label();		// Username error
+//	static protected Label label_errPassword = new Label();	// There error labels change based on the
+//	static protected Label noInputFound = new Label();			// user's input
+//	static private TextFlow errPassword;
+//	static protected Text errPasswordPart1 = new Text();		// This contains the user's input
+//	static protected Text errPasswordPart2 = new Text();		// This is the up arrow
+//	static protected Label errPasswordPart3 = new Label();		// This is the concatenation of the two
+
+    /* 
+	 * Feedback labels with text and color to specify which of the requirements have been satisfied
+	 * (using both text and the color green) and which have not (both with text and the color red).
+	 * 
+	 */
+	static protected Label validPassword = new Label();		// This only appears with a valid password
+	static protected Label label_Requirements = 
+    		new Label("A valid password must satisfy the following requirements:");
+	static protected Label label_UpperCase = new Label();		// These empty labels change based on the
+	static protected Label label_LowerCase = new Label();		// user's input
+	static protected Label label_NumericDigit = new Label();	
+	static protected Label label_SpecialChar = new Label();
+	static protected Label label_LongEnough = new Label();
+	static protected Label label_ShortEnough = new Label();
 
 	// This button allow the user to abort creating the first admin account and terminate
 	private static Button button_Quit = new Button("Quit");
@@ -158,39 +192,132 @@ public class ViewFirstAdmin {
 				true);
 		text_AdminUsername.setPromptText("Enter Admin Username");
 		text_AdminUsername.textProperty().addListener((observable, oldValue, newValue) 
+				-> {ModelFirstAdmin.checkForValidUserName(newValue); });
+		text_AdminUsername.textProperty().addListener((observable, oldValue, newValue) 
 				-> {ControllerFirstAdmin.setAdminUsername(); });
+		
+		// Establish an error message for when there is no input
+		setupLabelUI(label_errUsername, "Arial", 18, width, Pos.BASELINE_LEFT, 50, 200);
+		label_errUsername.setTextFill(Color.RED);
 
 		// Establish the text input operand field for the password
-		setupTextUI(text_AdminPassword1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, 
+		setupTextUI(text_AdminPassword1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 230, 
 				true);
 		text_AdminPassword1.setPromptText("Enter Admin Password");
+		text_AdminPassword1.textProperty().addListener((observable, oldValue, newValue) 
+				-> {ModelFirstAdmin.updatePassword(); });
 		text_AdminPassword1.textProperty().addListener((observable, oldValue, newValue)
 				-> {ControllerFirstAdmin.setAdminPassword1(); });
 
+		// Establish an error message for when there is no input
+//		setupLabelUI(noInputFound, "Arial", 18, width, Pos.BASELINE_LEFT, 50, 255);	
+//		noInputFound.setText("No input text found!");	// This changes based on input, but we 
+//		noInputFound.setTextFill(Color.RED);			// want this to be shown at startup
+//		
+//		// Establish an error message for the password, left aligned
+//		label_errPassword.setTextFill(Color.RED);
+//		label_errPassword.setAlignment(Pos.BASELINE_RIGHT);
+//		setupLabelUI(label_errPassword, "Arial", 18, width, Pos.BASELINE_LEFT, 50, 250);		
+//		
+//		// Error Message components for the Password
+//		errPasswordPart1.setFill(Color.BLACK);		// The user input is copied for this part
+//		errPasswordPart1.setFont(Font.font("Arial", FontPosture.REGULAR, 18));
+//		
+//		errPasswordPart2.setFill(Color.RED);		// A red up arrow is added next
+//		errPasswordPart2.setFont(Font.font("Arial", FontPosture.REGULAR, 24));
+//		
+//		errPassword = new TextFlow(errPasswordPart1, errPasswordPart2);
+//		errPassword.setMinWidth( width);	// The two parts are merged into one
+//		errPassword.setLayoutX(50);					// and positioned directly below the text
+//		errPassword.setLayoutY(250);					// input field
+//		
+//		setupLabelUI(errPasswordPart3, "Arial", 18, width, Pos.BASELINE_LEFT, 50, 250);
+		
+		// Position the composition object on the window
 		// Establish the text input operand field for the password
-		setupTextUI(text_AdminPassword2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, 
+		setupTextUI(text_AdminPassword2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 280, 
 				true);
 		text_AdminPassword2.setPromptText("Enter Admin Password Again");
 		text_AdminPassword2.textProperty().addListener((observable, oldValue, newValue) 
 				-> {ControllerFirstAdmin.setAdminPassword2(); });
 
 		// Set up the Log In button
-		setupButtonUI(button_AdminSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
+		setupButtonUI(button_AdminSetup, "Dialog", 18, 200, Pos.CENTER, 475, 250);
+		button_AdminSetup.setDisable(true);
 		button_AdminSetup.setOnAction((event) -> {
 			ControllerFirstAdmin.doSetupAdmin(theStage,1); 
 			});
 
 		// Label to display the Passwords do not match error message
-		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 18, width, Pos.CENTER, 0, 300);
+		setupLabelUI(label_PasswordsDoNotMatch, "Arial", 16, width, Pos.CENTER, 0, 345);
+		
+		// Position the assessment display of the various requirements components
+	    setupLabelUI(label_Requirements, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 370);
+	    
+	    setupLabelUI(label_UpperCase, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 400);
 
-		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
+	    setupLabelUI(label_LowerCase, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 430);
+	    
+	    setupLabelUI(label_NumericDigit, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 460);
+	    
+	    setupLabelUI(label_SpecialChar, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 490);
+	    
+	    setupLabelUI(label_LongEnough, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 520);
+	    
+	    setupLabelUI(label_ShortEnough, "Arial", 14, width, Pos.BASELINE_LEFT, 50, 550);
+	    
+	    resetAssessments();	// This method is use after each change to establish an initial state
+		
+		// Setup the valid Password message, which is used when all the requirements have been met
+		validPassword.setTextFill(Color.GREEN);
+		validPassword.setAlignment(Pos.BASELINE_RIGHT);
+		setupLabelUI(validPassword, "Arial", 18, width, Pos.BASELINE_LEFT, 50, 580);
+
+		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 610);
 		button_Quit.setOnAction((event) -> {ControllerFirstAdmin.performQuit(); });
 
 		// Place all of the just-initialized GUI elements into the pane
 		theRootPane.getChildren().addAll(label_ApplicationTitle, label_TitleLine1,
-				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
+				label_TitleLine2, text_AdminUsername, label_errUsername, text_AdminPassword1, 
 				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch,
-				button_Quit);
+				button_Quit, validPassword, //noInputFound, label_errPassword, errPassword, errPasswordPart3, 
+				label_Requirements, label_UpperCase, label_LowerCase, label_NumericDigit,
+				label_SpecialChar, label_LongEnough, label_ShortEnough);
+	}
+	
+	/*******
+	 * <p> Title: resetAssessments - Used by all MVC components to reset widgets to a known state
+	 * </p>
+	 * 
+	 * <p> Description: This method resets the five password requirement assessment to their 
+	 * initial state of not satisfied.  During the evaluation process in the Model, the changes
+	 * the user makes can change one or more of these to satisfied and to the color green.
+	 * 
+	 */
+	
+	static protected void resetAssessments() {
+	    label_UpperCase.setText("At least one upper case letter - Not yet satisfied");
+	    label_UpperCase.setTextFill(Color.RED);
+	    
+	    label_LowerCase.setText("At least one lower case letter - Not yet satisfied");
+	    label_LowerCase.setTextFill(Color.RED);
+	    
+	    label_NumericDigit.setText("At least one numeric digit - Not yet satisfied");
+	    label_NumericDigit.setTextFill(Color.RED);
+	    
+	    label_SpecialChar.setText("At least one special character - Not yet satisfied");
+	    label_SpecialChar.setTextFill(Color.RED);
+	    
+	    label_LongEnough.setText("At least eight characters - Not yet satisfied");
+	    label_LongEnough.setTextFill(Color.RED);
+	    
+	    label_ShortEnough.setText("At most thirty-two characters - Not yet satisfied");
+	    label_ShortEnough.setTextFill(Color.RED);
+	    
+	    validPassword.setText("");
+	    validPassword.setTextFill(Color.RED);
+	    
+	    button_AdminSetup.setDisable(true);
 	}
 	
 	

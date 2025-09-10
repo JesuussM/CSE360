@@ -77,7 +77,9 @@ public class ControllerFirstAdmin {
 	protected static void doSetupAdmin(Stage ps, int r) {
 		
 		// Make sure the two passwords are the same
-		if (adminPassword1.compareTo(adminPassword2) == 0) {
+		
+		if (adminPassword1.compareTo(adminPassword2) == 0 &&
+				ModelFirstAdmin.checkForValidUserName(adminUsername) == "") {
         	// Create the passwords and proceed to the user home page
         	User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
         			false);
