@@ -141,6 +141,26 @@ public class Database {
 				+ "issued_by_admin VARCHAR(255) NULL"
 				+ ")";
 		statement.execute(otpTable);
+		
+		// Create the post table
+		String postTable = "CREATE TABLE IF NOT EXISTS postDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "author VARCHAR(255), "
+				+ "content VARCHAR(255), "
+				+ "thread VARCHAR(255), "
+				+ "timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+				+ "deleted BOOL DEFAULT FALSE, ";
+		statement.execute(postTable);
+		
+		// Create the reply table
+		String replyTable = "CREATE TABLE IF NOT EXISTS replyDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "postid INT NOT NULL, "
+				+ "author VARCHAR(255), "
+				+ "content VARCHAR(255), "
+				+ "timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+				+ "read BOOL DEFAULT FALSE, ";
+		statement.execute(replyTable);
 	}
 
 

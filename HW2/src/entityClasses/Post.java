@@ -21,12 +21,12 @@ public class Post {
 	/*
 	 * These are the private attributes for this entity object
 	 */
-    private int id;
+    // private int id;
     private String author;
     private String content;
     private String thread;
     private LocalDateTime timestamp;
-    private List<Integer> replyIds;
+    // private List<Integer> replyIds;
     private Boolean deleted;
     
     /*****
@@ -44,12 +44,12 @@ public class Post {
      * 
      */
     public Post(int id, String author, String content, String thread) {
-        this.id = id;
+        // this.id = id;
         this.author = author;
         this.content = content;
         this.thread = thread != null ? thread : "General";
         this.timestamp = LocalDateTime.now();
-        this.replyIds = new ArrayList<>();
+        //this.replyIds = new ArrayList<>();
         this.deleted = false;
     }
     
@@ -61,9 +61,9 @@ public class Post {
      * @param an int of replyId
      * 
      */
-    public void addReply(int replyId) {
-        replyIds.add(replyId);
-    }
+//    public void addReply(int replyId) {
+//        replyIds.add(replyId);
+//    }
     
     /*****
      * <p> Method: void markDeleted() </p>
@@ -83,9 +83,9 @@ public class Post {
      * @return an int of id
      * 
      */
-    public int getId() {
-        return id;
-    }
+//    public int getId() {
+//        return id;
+//    }
 
     /*****
      * <p> Method: String getAuthor() </p>
@@ -143,9 +143,9 @@ public class Post {
      * @return a List of replies ids
      * 
      */
-    public List<Integer> getReplyIds() {
-        return replyIds;
-    }
+//    public List<Integer> getReplyIds() {
+//        return replyIds;
+//    }
     
     /*****
      * <p> Method: Boolean isDeleted() </p>

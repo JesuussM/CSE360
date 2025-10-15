@@ -19,7 +19,7 @@ public class Reply {
 	/*
 	 * These are the private attributes for this entity object
 	 */
-    private int id;
+    //private int id;
     private int postId;
     private String author;
     private String content;
@@ -42,7 +42,7 @@ public class Reply {
      * 
      */
     public Reply(int id, int postId, String author, String content) {
-        this.id = id;
+        //this.id = id;
         this.postId = postId;
         this.author = author;
         this.content = content;
@@ -68,9 +68,9 @@ public class Reply {
      * @return an int of reply id
      * 
      */
-    public int getId() {
-        return id;
-    }
+//    public int getId() {
+//        return id;
+//    }
     
     /*****
      * <p> Method: String getPostId() </p>
