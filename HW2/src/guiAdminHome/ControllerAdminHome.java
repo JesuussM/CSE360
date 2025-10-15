@@ -143,6 +143,18 @@ public class ControllerAdminHome {
 	/**********
 	 * <p> 
 	 * 
+	 * Title: continueToDiscussion () Method. </p>
+	 * 
+	 * <p> Description: Protected method that allows an to continue to discussion home page.</p>
+	 */
+	protected static void continueToDiscussion() {
+		guiDiscussionHome.ViewDiscussionHome.displayDiscussionHome(ViewAdminHome.theStage, 
+				ViewAdminHome.theUser);
+	}
+	
+	/**********
+	 * <p> 
+	 * 
 	 * Title: invalidEmailAddress () Method. </p>
 	 * 
 	 * <p> Description: Protected method that is intended to check an email address before it is
