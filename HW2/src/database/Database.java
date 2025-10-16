@@ -142,6 +142,12 @@ public class Database {
 				+ ")";
 		statement.execute(otpTable);
 		
+		// Create the thread table
+		String threadTable = "CREATE TABLE IF NOT EXISTS threadDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "title VARCHAR(255) UNIQUE) ";
+		statement.execute(threadTable);
+		
 		// Create the post table
 		String postTable = "CREATE TABLE IF NOT EXISTS postDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
@@ -149,7 +155,7 @@ public class Database {
 				+ "content VARCHAR(255), "
 				+ "thread VARCHAR(255), "
 				+ "timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
-				+ "deleted BOOL DEFAULT FALSE, ";
+				+ "deleted BOOL DEFAULT FALSE) ";
 		statement.execute(postTable);
 		
 		// Create the reply table
@@ -159,7 +165,7 @@ public class Database {
 				+ "author VARCHAR(255), "
 				+ "content VARCHAR(255), "
 				+ "timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
-				+ "read BOOL DEFAULT FALSE, ";
+				+ "read BOOL DEFAULT FALSE) ";
 		statement.execute(replyTable);
 	}
 
@@ -1382,5 +1388,47 @@ public class Database {
 	    } finally {
 	        try { connection.setAutoCommit(true); } catch (SQLException ignore) {}
 	    }
+	}
+	
+	/*******
+	 * <p> Method: boolean getAllThreads() </p>
+	 * 
+	 * <p> Description: Get all Threads from the database</p>
+	 * 
+	 * @return a list of thread titles string
+	 *  
+	 */
+	public List<String> getAllThreads() {
+		String query = "SELECT title FROM threadDB";
+		List<String> output = new ArrayList<>();
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String value = rs.getString("title");
+				output.add(value);
+			}
+		} catch (SQLException e) {
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
+	 * <p> Method: void createThread(String name) </p>
+	 * 
+	 * <p> Description: Add a thread to threadDB</p>
+	 * 
+	 * @param a string for the thread title
+	 *  
+	 */
+	public void createThread(String name) {
+		String query = "INSERT INTO threadDB (title) "
+				+ "VALUES (?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, name);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("Database.createThread failed " + e);
+		}
 	}
 }

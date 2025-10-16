@@ -1,7 +1,10 @@
 package guiDiscussionHome;
 
+import java.util.List;
+
 import database.Database;
-import guiAdminHome.ViewAdminHome;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 
 /*******
  * <p> Title: ControllerDiscussionHome Class. </p>
@@ -31,6 +34,51 @@ public class ControllerDiscussionHome {
 
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	
+	/**********
+	 * <p> 
+	 * 
+	 * Title: updateData(List<\String> threads) Method. </p>
+	 * 
+	 * <p> Description: Protected method that updates the data of the discussion home page. </p>
+	 * 
+	 * @param a list of thread titles
+	 * 
+	 */
+	protected static void updateData(List<String> threads) {
+		// Update thread radio buttons
+		ViewDiscussionHome.vbox_ThreadList.getChildren().clear();
+		ViewDiscussionHome.toggleGroup_Threads = new ToggleGroup();
+		
+		for (String title : threads) {
+			RadioButton rb = new RadioButton(title);
+			rb.setWrapText(true);
+			rb.setToggleGroup(ViewDiscussionHome.toggleGroup_Threads);
+			rb.setOnAction(e -> updateSelectedThread(rb));
+			rb.setMinWidth(ViewDiscussionHome.vbox_ThreadList.getPrefWidth() - 20);
+			ViewDiscussionHome.vbox_ThreadList.getChildren().add(rb);
+			System.out.println("Threads added");
+		}
+		
+		// Update post sections
+	}
+
+	/**********
+	 * <p> 
+	 * 
+	 * Title: updateSelectedThread(RadioButton selected) Method. </p>
+	 * 
+	 * <p> Description: Protected method that handles the selection of the radio button </p>
+	 * 
+	 * @param the radio button that is selected
+	 */
+	private static void updateSelectedThread(RadioButton selected) {
+		if (selected != null && selected.isSelected()) {
+			String selectedTitle = selected.getText();
+			System.out.println("Selected discussion: " + selectedTitle);
+			// TODO: populate scroll_PostPane with thread posts
+		}
+	}
 	
 	/**********
 	 * <p> 

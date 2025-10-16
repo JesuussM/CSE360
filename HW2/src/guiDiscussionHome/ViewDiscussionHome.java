@@ -1,26 +1,21 @@
 package guiDiscussionHome;
 
-import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import database.Database;
 import entityClasses.User;
-import guiAdminHome.ControllerAdminHome;
-import guiAdminHome.ViewAdminHome;
 import guiUserUpdate.ViewUserUpdate;
 
 /*******
@@ -66,6 +61,15 @@ public class ViewDiscussionHome {
 
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
+	
+	protected static VBox vbox_ThreadList = new VBox(10);
+	protected static ToggleGroup toggleGroup_Threads = new ToggleGroup();
+	
+	// This is a separator and it is used to partition the GUI for various tasks
+	private static Line line_Separator2 = new Line(200, 120, 200, height-100);
+	
+	// scrollable pane view to store the posts
+	protected static ScrollPane scroll_PostPane = new ScrollPane();
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -130,7 +134,13 @@ public class ViewDiscussionHome {
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
-		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data																// UserUpdate page
+		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
+		
+//		theDatabase.createThread("General");
+//		theDatabase.createThread("Test 1");
+//		theDatabase.createThread("Test 2");
+		// Establish the data when page is opened
+		ControllerDiscussionHome.updateData(theDatabase.getAllThreads());
 				
 		// Set the title for the window and display the page
 		theStage.setTitle("CSE 360 Foundation Code: Discussions");
@@ -171,7 +181,22 @@ public class ViewDiscussionHome {
 		// TODO: Change this action, it should return the user to their role's homepage
 				{ViewUserUpdate.displayUserUpdate(theStage, theUser);});
 		
-		// GUI Area 5
+		// GUI Area 2
+		vbox_ThreadList.setLayoutX(30);
+		vbox_ThreadList.setLayoutY(140);
+		vbox_ThreadList.setPrefWidth(170);
+		vbox_ThreadList.setPrefHeight(height - 240);
+		
+		// GUI Area 3
+		scroll_PostPane.fitToHeightProperty().set(true);
+		scroll_PostPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+		scroll_PostPane.setLayoutX(210);
+		scroll_PostPane.setLayoutY(120);
+		scroll_PostPane.setPrefWidth(width - 230);
+		scroll_PostPane.setPrefHeight(height - 250);
+	
+		
+		// GUI Area 4
 		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
 		button_Logout.getStyleClass().addAll("danger", "button-outlined");
 		button_Logout.setOnAction((event) -> {ControllerDiscussionHome.performLogout(); });
@@ -185,6 +210,8 @@ public class ViewDiscussionHome {
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_Return, line_Separator1, 
+			line_Separator2, vbox_ThreadList,  
+			scroll_PostPane, line_Separator4,
     		button_Logout,
     		button_Quit
     		);
