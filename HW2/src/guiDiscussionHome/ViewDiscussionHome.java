@@ -8,12 +8,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
+import java.util.Arrays;
+import java.util.List;
 import database.Database;
 import entityClasses.User;
 import guiUserUpdate.ViewUserUpdate;
@@ -70,6 +72,13 @@ public class ViewDiscussionHome {
 	
 	// scrollable pane view to store the posts
 	protected static ScrollPane scroll_PostPane = new ScrollPane();
+	protected static VBox vbox_PostList = new VBox(12);
+	protected static VBox vbox_PostCard = new VBox(10);
+	protected static VBox vbox_PostCardContainer = new VBox(6);
+	protected static HBox hbox_PostTitle = new HBox();
+	protected static Label label_PostTitle = new Label();
+	protected static Label label_PostDetails = new Label();
+	protected static Label label_PostFooter = new Label();
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -139,8 +148,10 @@ public class ViewDiscussionHome {
 //		theDatabase.createThread("General");
 //		theDatabase.createThread("Test 1");
 //		theDatabase.createThread("Test 2");
+		List<String> posts = Arrays.asList("Post 1", "Post 2", "Post 3", "Post 4", "Post 5");
+		
 		// Establish the data when page is opened
-		ControllerDiscussionHome.updateData(theDatabase.getAllThreads());
+		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), posts);
 				
 		// Set the title for the window and display the page
 		theStage.setTitle("CSE 360 Foundation Code: Discussions");
@@ -188,13 +199,15 @@ public class ViewDiscussionHome {
 		vbox_ThreadList.setPrefHeight(height - 240);
 		
 		// GUI Area 3
-		scroll_PostPane.fitToHeightProperty().set(true);
-		scroll_PostPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-		scroll_PostPane.setLayoutX(210);
+		scroll_PostPane.setFitToWidth(true);
+		scroll_PostPane.setFitToHeight(true);
+		scroll_PostPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scroll_PostPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scroll_PostPane.setLayoutX(220);
 		scroll_PostPane.setLayoutY(120);
 		scroll_PostPane.setPrefWidth(width - 230);
 		scroll_PostPane.setPrefHeight(height - 250);
-	
+		scroll_PostPane.setContent(vbox_PostList);
 		
 		// GUI Area 4
 		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
@@ -211,9 +224,8 @@ public class ViewDiscussionHome {
 		theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_Return, line_Separator1, 
 			line_Separator2, vbox_ThreadList,  
-			scroll_PostPane, line_Separator4,
-    		button_Logout,
-    		button_Quit
+			scroll_PostPane,
+			line_Separator4, button_Logout, button_Quit
     		);
 	}
 	

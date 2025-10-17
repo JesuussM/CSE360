@@ -3,8 +3,12 @@ package guiDiscussionHome;
 import java.util.List;
 
 import database.Database;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /*******
  * <p> Title: ControllerDiscussionHome Class. </p>
@@ -45,7 +49,7 @@ public class ControllerDiscussionHome {
 	 * @param a list of thread titles
 	 * 
 	 */
-	protected static void updateData(List<String> threads) {
+	protected static void updateData(List<String> threads, List<String> posts) {
 		// Update thread radio buttons
 		ViewDiscussionHome.vbox_ThreadList.getChildren().clear();
 		ViewDiscussionHome.toggleGroup_Threads = new ToggleGroup();
@@ -61,6 +65,39 @@ public class ControllerDiscussionHome {
 		}
 		
 		// Update post sections
+		ViewDiscussionHome.vbox_PostList.getChildren().clear();
+		ViewDiscussionHome.vbox_PostCard = new VBox();
+		
+		for (String post : posts) {
+			VBox card = new VBox(10);
+			VBox container = new VBox(6);
+			HBox header = new HBox();
+			Label title = new Label();
+			Label details = new Label();
+			Label footer = new Label();
+			card.getStyleClass().add("card");
+			card.setPrefWidth(200);
+			card.prefWidthProperty().bind(ViewDiscussionHome.vbox_PostList.widthProperty().subtract(20));
+			container.getStyleClass().add("container");
+			container.setPadding(new Insets(6,8,6,8));
+			
+			header.getStyleClass().add("header");
+			title.getStyleClass().add("title-3");
+			title.setText(post);
+			header.getChildren().add(title);
+			
+			details.getStyleClass().add("text-caption");
+			details.setText("Thread " + " Username " + " timestamp");
+			
+			footer.getStyleClass().add("text-small");
+			footer.setText("   3 Replies");
+			
+			container.getChildren().addAll(title, details, footer);
+			card.getChildren().add(container);
+			ViewDiscussionHome.vbox_PostList.getChildren().add(card);
+		}
+		
+		
 	}
 
 	/**********
