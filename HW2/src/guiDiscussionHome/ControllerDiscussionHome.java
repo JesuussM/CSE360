@@ -51,6 +51,7 @@ public class ControllerDiscussionHome {
 	 * 
 	 */
 	protected static void updateData(List<String> threads, List<Post> posts) {
+		ViewDiscussionHome.theRootPane.getStylesheets().add("file:src/cupertino-dark.css");
 		// Update thread radio buttons
 		ViewDiscussionHome.vbox_ThreadList.getChildren().clear();
 		ViewDiscussionHome.toggleGroup_Threads = new ToggleGroup();
@@ -62,7 +63,6 @@ public class ControllerDiscussionHome {
 			rb.setOnAction(e -> updateSelectedThread(rb));
 			rb.setMinWidth(ViewDiscussionHome.vbox_ThreadList.getPrefWidth() - 20);
 			ViewDiscussionHome.vbox_ThreadList.getChildren().add(rb);
-			System.out.println("Threads added");
 		}
 		
 		// Update post sections
@@ -77,21 +77,22 @@ public class ControllerDiscussionHome {
 			Label details = new Label();
 			Label footer = new Label();
 			card.getStyleClass().add("card");
+			container.setPadding(new Insets(6,8,6,20));
 			card.setPrefWidth(200);
 			card.prefWidthProperty().bind(ViewDiscussionHome.vbox_PostList.widthProperty().subtract(20));
 			container.getStyleClass().add("container");
-			container.setPadding(new Insets(6,8,6,8));
+			container.setPadding(new Insets(6,8,6,20));
 			
 			header.getStyleClass().add("header");
 			title.getStyleClass().add("title-3");
-			title.setText(post.getTitle());
+			title.setText("   " + post.getTitle());
 			header.getChildren().add(title);
 			
 			details.getStyleClass().add("text-caption");
-			details.setText(String.join("   ", post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
+			details.setText(String.join("   ", "  ", post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
 			
 			footer.getStyleClass().add("text-small");
-			footer.setText("   3 Replies");
+			footer.setText("    3 Replies");
 			
 			container.getChildren().addAll(title, details, footer);
 			card.getChildren().add(container);

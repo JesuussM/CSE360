@@ -14,11 +14,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import java.util.Arrays;
-import java.util.List;
 import database.Database;
-import entityClasses.Post;
 import entityClasses.User;
+import guiUserUpdate.ControllerUserUpdate;
 import guiUserUpdate.ViewUserUpdate;
 
 /*******
@@ -59,8 +57,8 @@ public class ViewDiscussionHome {
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
 	protected static Label label_PageTitle = new Label();
-	protected static Label label_UserDetails = new Label();
 	protected static Button button_Return = new Button("Return");
+	protected static Button button_Create = new Button("Create Post");
 
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
@@ -101,7 +99,7 @@ public class ViewDiscussionHome {
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
-	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 
+	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current logged in User
 
 	private static Scene theDiscussionHomeScene;		// The shared Scene each invocation populates
@@ -183,15 +181,17 @@ public class ViewDiscussionHome {
 		// GUI Area 1
 		label_PageTitle.setText("Discussions");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
-		label_PageTitle.getStyleClass().add("text-bold");
-
-		label_UserDetails.setText("User: " + theUser.getUserName());
-		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
+		label_PageTitle.getStyleClass().addAll("text-bold", "title-2");
 		
-		setupButtonUI(button_Return, "Dialog", 18, 170, Pos.CENTER, 610, 45);
+		setupButtonUI(button_Return, "Dialog", 18, 100, Pos.CENTER, 20, 55);
 		button_Return.getStyleClass().addAll("accent", "button-outlined");
 		button_Return.setOnAction((event) -> 
-		// TODO: Change this action, it should return the user to their role's homepage
+			{ControllerUserUpdate.goToUserHomePage(theStage, theUser);});
+		
+		setupButtonUI(button_Create, "Dialog", 18, 100, Pos.CENTER, width-140, 55);
+		button_Create.getStyleClass().addAll("success");
+		button_Create.setOnAction((event) -> 
+		// TODO: Change this action to go to create page
 				{ViewUserUpdate.displayUserUpdate(theStage, theUser);});
 		
 		// GUI Area 2
@@ -224,7 +224,7 @@ public class ViewDiscussionHome {
 		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
-			label_PageTitle, label_UserDetails, button_Return, line_Separator1, 
+			label_PageTitle, button_Return, button_Create, line_Separator1, 
 			line_Separator2, vbox_ThreadList,  
 			scroll_PostPane,
 			line_Separator4, button_Logout, button_Quit

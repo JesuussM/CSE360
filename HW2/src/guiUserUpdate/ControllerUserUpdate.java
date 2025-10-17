@@ -35,7 +35,7 @@ public class ControllerUserUpdate {
 	 * 
 	 * @param theUser specifies the user so we go to the right page and so the right information
 	 */
-	protected static void goToUserHomePage(Stage theStage, User theUser) {
+	public static void goToUserHomePage(Stage theStage, User theUser) {
 		
 		// Get the roles the user selected during login
 		int theRole = applicationMain.FoundationsMain.activeHomePage;
