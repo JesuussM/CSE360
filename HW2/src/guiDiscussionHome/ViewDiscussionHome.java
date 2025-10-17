@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 import database.Database;
+import entityClasses.Post;
 import entityClasses.User;
 import guiUserUpdate.ViewUserUpdate;
 
@@ -148,10 +149,11 @@ public class ViewDiscussionHome {
 //		theDatabase.createThread("General");
 //		theDatabase.createThread("Test 1");
 //		theDatabase.createThread("Test 2");
-		List<String> posts = Arrays.asList("Post 1", "Post 2", "Post 3", "Post 4", "Post 5");
+//		Post post = new Post("jesus", "Test Title", "This is test content text", "General");
+//		theDatabase.createPost(post);
 		
 		// Establish the data when page is opened
-		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), posts);
+		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), theDatabase.getAllPosts());
 				
 		// Set the title for the window and display the page
 		theStage.setTitle("CSE 360 Foundation Code: Discussions");

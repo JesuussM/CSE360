@@ -3,6 +3,7 @@ package guiDiscussionHome;
 import java.util.List;
 
 import database.Database;
+import entityClasses.Post;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -49,7 +50,7 @@ public class ControllerDiscussionHome {
 	 * @param a list of thread titles
 	 * 
 	 */
-	protected static void updateData(List<String> threads, List<String> posts) {
+	protected static void updateData(List<String> threads, List<Post> posts) {
 		// Update thread radio buttons
 		ViewDiscussionHome.vbox_ThreadList.getChildren().clear();
 		ViewDiscussionHome.toggleGroup_Threads = new ToggleGroup();
@@ -68,7 +69,7 @@ public class ControllerDiscussionHome {
 		ViewDiscussionHome.vbox_PostList.getChildren().clear();
 		ViewDiscussionHome.vbox_PostCard = new VBox();
 		
-		for (String post : posts) {
+		for (Post post : posts) {
 			VBox card = new VBox(10);
 			VBox container = new VBox(6);
 			HBox header = new HBox();
@@ -83,11 +84,11 @@ public class ControllerDiscussionHome {
 			
 			header.getStyleClass().add("header");
 			title.getStyleClass().add("title-3");
-			title.setText(post);
+			title.setText(post.getTitle());
 			header.getChildren().add(title);
 			
 			details.getStyleClass().add("text-caption");
-			details.setText("Thread " + " Username " + " timestamp");
+			details.setText(String.join("   ", post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
 			
 			footer.getStyleClass().add("text-small");
 			footer.setText("   3 Replies");

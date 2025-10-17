@@ -1,6 +1,7 @@
 package entityClasses;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +22,12 @@ public class Post {
 	/*
 	 * These are the private attributes for this entity object
 	 */
-    // private int id;
     private String author;
+    private String title;
     private String content;
     private String thread;
     private LocalDateTime timestamp;
-    // private List<Integer> replyIds;
+    private List<Integer> replyIds;
     private Boolean deleted;
     
     /*****
@@ -34,22 +35,24 @@ public class Post {
      * 
      * <p> Description: This constructor is used to establish post objects. </p>
      * 
-     * @param id specifies the id for this post
      * 
      * @param author specifies the author for this post
+     * 
+     * @param title specifies the title for this post
      * 
      * @param content specifies the text for this post
      * 
      * @param thread specifies the thread for this post
      * 
      */
-    public Post(int id, String author, String content, String thread) {
+    public Post(String author, String title, String content, String thread) {
         // this.id = id;
         this.author = author;
+        this.title = title;
         this.content = content;
         this.thread = thread != null ? thread : "General";
         this.timestamp = LocalDateTime.now();
-        //this.replyIds = new ArrayList<>();
+        this.replyIds = new ArrayList<>();
         this.deleted = false;
     }
     
@@ -61,9 +64,9 @@ public class Post {
      * @param an int of replyId
      * 
      */
-//    public void addReply(int replyId) {
-//        replyIds.add(replyId);
-//    }
+    public void addReply(int replyId) {
+        replyIds.add(replyId);
+    }
     
     /*****
      * <p> Method: void markDeleted() </p>
@@ -100,6 +103,18 @@ public class Post {
     }
     
     /*****
+     * <p> Method: String getTitle() </p>
+     * 
+     * <p> Description: This getter returns the title. </p>
+     * 
+     * @return a string of title
+     * 
+     */
+    public String getTitle() {
+        return title;
+    }
+    
+    /*****
      * <p> Method: String getContent() </p>
      * 
      * <p> Description: This getter returns the content. </p>
@@ -131,8 +146,9 @@ public class Post {
      * @return a LocalDateTime of timestamp
      * 
      */
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getTimestamp() {
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy hh:mm a");
+        return timestamp.format(formatter);
     }
     
     /*****
@@ -143,9 +159,9 @@ public class Post {
      * @return a List of replies ids
      * 
      */
-//    public List<Integer> getReplyIds() {
-//        return replyIds;
-//    }
+    public List<Integer> getReplyIds() {
+        return replyIds;
+    }
     
     /*****
      * <p> Method: Boolean isDeleted() </p>

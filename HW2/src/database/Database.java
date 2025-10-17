@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import entityClasses.Post;
 import entityClasses.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -152,6 +153,7 @@ public class Database {
 		String postTable = "CREATE TABLE IF NOT EXISTS postDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "author VARCHAR(255), "
+				+ "title VARCHAR(255), "
 				+ "content VARCHAR(255), "
 				+ "thread VARCHAR(255), "
 				+ "timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
@@ -1429,6 +1431,55 @@ public class Database {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Database.createThread failed " + e);
+		}
+	}
+	
+	/*******
+	 * <p> Method: boolean getAllPostsDetails() </p>
+	 * 
+	 * <p> Description: Gets all posts</p>
+	 * 
+	 * @return a list of post objects
+	 *  
+	 */
+	public List<Post> getAllPosts() {
+		List<Post> output = new ArrayList<>();
+		String query = "SELECT * FROM postDB";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				output.add(new Post
+							(rs.getString("author"),
+							rs.getString("title"),
+							rs.getString("content"),
+							rs.getString("thread")));
+			}
+		} catch (SQLException e) {
+			System.out.println("getAllPosts error" + e);
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
+	 * <p> Method: void createPost(Post post) </p>
+	 * 
+	 * <p> Description: Add a post to postDB</p>
+	 * 
+	 * @param a post object
+	 *  
+	 */
+	public void createPost(Post post) {
+		String query = "INSERT INTO postDB (author, title, content, thread) "
+				+ "VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, post.getAuthor());			
+			pstmt.setString(2, post.getTitle());
+			pstmt.setString(3, post.getContent());
+			pstmt.setString(4, post.getThread());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("Database.createPost failed " + e);
 		}
 	}
 }
