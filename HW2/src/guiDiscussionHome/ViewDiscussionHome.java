@@ -158,7 +158,8 @@ public class ViewDiscussionHome {
 //		theDatabase.createPost(post);
 		
 		// Establish the data when page is opened
-		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), theDatabase.getAllPosts());
+		ControllerDiscussionHome.updateThreads(theDatabase.getAllThreads());
+		ControllerDiscussionHome.updatePosts(theDatabase.getAllPosts());
 		
 		// *********************************
 		// Test cases
@@ -217,9 +218,9 @@ public class ViewDiscussionHome {
 		toggle_MyPosts.setSelected(false);
 		toggle_MyPosts.setOnAction(event -> {
 		    if (toggle_MyPosts.isSelected()) {
-		       ControllerDiscussionHome.updateData(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
+		       ControllerDiscussionHome.updatePosts(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
 		    } else {
-		    	ControllerDiscussionHome.updateData(theDatabase.getAllPosts());
+		    	ControllerDiscussionHome.updatePosts(theDatabase.getAllPosts());
 		    }
 		});
 		

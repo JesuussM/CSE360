@@ -67,7 +67,7 @@ public class ViewListUsers {
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
-	protected static Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+	public static Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
 		
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application, logging
 	// out, and on other pages a return is provided so the user can return to a previous page when

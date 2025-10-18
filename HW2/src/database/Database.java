@@ -1593,6 +1593,24 @@ public class Database {
 	}
 	
 	/*******
+	 * <p> Method: void deletePost(Post post) </p>
+	 * 
+	 * <p> Description: Add a post to postDB</p>
+	 * 
+	 * @param a post object
+	 *  
+	 */
+	public void deletePost(int postid) {
+		String query = "DELETE FROM postDB WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, postid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("Database.deletePost failed " + e);
+		}
+	}
+	
+	/*******
 	 * <p> Method: boolean getRepliesByPostID() </p>
 	 * 
 	 * <p> Description: Gets all reply objects using post id</p>
