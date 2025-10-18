@@ -1536,6 +1536,40 @@ public class Database {
 	}
 	
 	/*******
+	 * <p> Method: boolean getPostByAuthor() </p>
+	 * 
+	 * <p> Description: Gets posts by author</p>
+	 * 
+	 * @param author		the string author
+	 * 
+	 * @return list of post objects
+	 *  
+	 */
+	public List<Post> getPostByAuthor(String author) {
+		List<Post> output = new ArrayList<>();
+		String query = "SELECT * FROM postDB where author = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, author);
+			ResultSet rs = pstmt.executeQuery();
+			 while (rs.next()) {
+				 	int id = rs.getInt("id");
+		            String title = rs.getString("title");
+		            String content = rs.getString("content");
+		            String thread = rs.getString("thread");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean deleted = rs.getBoolean("deleted");
+
+		            Post post = new Post(id, author, title, content, thread, timestamp, deleted);
+		            output.add(post);
+		        }
+		} catch (SQLException e) {
+			System.out.println("getPostByAuthor error" + e);
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
 	 * <p> Method: void createPost(Post post) </p>
 	 * 
 	 * <p> Description: Add a post to postDB</p>

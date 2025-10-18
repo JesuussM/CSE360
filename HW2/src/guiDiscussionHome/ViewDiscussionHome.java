@@ -7,6 +7,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -58,6 +59,7 @@ public class ViewDiscussionHome {
 	// and a button to allow this user to update the account settings
 	protected static Label label_PageTitle = new Label();
 	protected static Button button_Return = new Button("Return");
+	protected static ToggleButton toggle_MyPosts = new ToggleButton("Only My Posts");
 	protected static Button button_Create = new Button("Create Post");
 
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -188,6 +190,16 @@ public class ViewDiscussionHome {
 		button_Return.setOnAction((event) -> 
 			{ControllerUserUpdate.goToUserHomePage(theStage, theUser);});
 		
+		setupToggleUI(toggle_MyPosts, "Dialog", 18, 100, Pos.CENTER, width-300, 55);
+		toggle_MyPosts.setSelected(false);
+		toggle_MyPosts.setOnAction(event -> {
+		    if (toggle_MyPosts.isSelected()) {
+		       ControllerDiscussionHome.updateData(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
+		    } else {
+		    	ControllerDiscussionHome.updateData(theDatabase.getAllPosts());
+		    }
+		});
+		
 		setupButtonUI(button_Create, "Dialog", 18, 100, Pos.CENTER, width-140, 55);
 		button_Create.getStyleClass().addAll("success");
 		button_Create.setOnAction((event) -> 
@@ -223,7 +235,7 @@ public class ViewDiscussionHome {
 		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
-			label_PageTitle, button_Return, button_Create, line_Separator1, 
+			label_PageTitle, button_Return, toggle_MyPosts, button_Create, line_Separator1, 
 			line_Separator2, vbox_ThreadList,  
 			scroll_PostPane,
 			line_Separator4, button_Logout, button_Quit
@@ -268,6 +280,25 @@ public class ViewDiscussionHome {
 	 * @param y		The location from the top (y axis)
 	 */
 	private void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y){
+		b.setFont(Font.font(ff, f));
+		b.setMinWidth(w);
+		b.setAlignment(p);
+		b.setLayoutX(x);
+		b.setLayoutY(y);		
+	}
+	
+	/**********
+	 * Private local method to initialize the standard fields for a button
+	 * 
+	 * @param b		The toggle object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the toggle
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 */
+	private void setupToggleUI(ToggleButton b, String ff, double f, double w, Pos p, double x, double y){
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
