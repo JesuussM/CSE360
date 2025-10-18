@@ -17,7 +17,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import database.Database;
 import entityClasses.User;
+import guiCreatePost.ControllerCreatePost;
 import guiCreatePost.ViewCreatePost;
+import guiPostView.ReplyDialog;
 import guiUserUpdate.ControllerUserUpdate;
 
 /*******
@@ -106,6 +108,9 @@ public class ViewDiscussionHome {
 
 	private static Scene theDiscussionHomeScene;		// The shared Scene each invocation populates
 	
+	public static int numPassed = 0;	// Counter of the number of passed tests
+	public static int numFailed = 0;	// Counter of the number of failed tests
+	
 	/*-*******************************************************************************************
 
 	Constructors
@@ -154,7 +159,25 @@ public class ViewDiscussionHome {
 		
 		// Establish the data when page is opened
 		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), theDatabase.getAllPosts());
-				
+		
+		// *********************************
+		// Test cases
+		System.out.println("____________________________________________________________________________");
+		System.out.println("\nTesting Automation");
+		
+		ControllerCreatePost.validatePostTest("Test", "");
+		ControllerCreatePost.validatePostTest("", "Test");
+		ControllerCreatePost.validatePostTest("Test", "Test");
+		
+		ReplyDialog.validateReplyTest("");
+		ReplyDialog.validateReplyTest("Test");
+		
+		System.out.println("____________________________________________________________________________");
+		System.out.println();
+		System.out.println("Number of tests passed: "+ numPassed);
+		System.out.println("Number of tests failed: "+ numFailed);
+		// *********************************
+		
 		// Set the title for the window and display the page
 		theStage.setTitle("CSE 360 Foundation Code: Discussions");
 		theStage.setScene(theDiscussionHomeScene);						// Set this page onto the stage

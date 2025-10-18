@@ -1,6 +1,7 @@
 package guiPostView;
 
 import entityClasses.Reply;
+import guiDiscussionHome.ViewDiscussionHome;
 import inputValidation.InputValidation;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
@@ -91,7 +92,11 @@ public class ReplyDialog {
 	 */
 	public static void validateReplyTest(String content) {
 		if (content.isBlank()) {
-			System.out.println("Create Reply failed because content is blank");
-		};
+			System.out.println("FAILED: Create Reply failed because content is blank!");
+			ViewDiscussionHome.numFailed++;
+		} else {;
+		System.out.println("PASSED: Create Reply passed!");
+			ViewDiscussionHome.numPassed++;
+		}
 	}
 }

@@ -62,9 +62,14 @@ public class ControllerCreatePost {
 	 */
 	public static void validatePostTest(String title, String content) {
 		if (title.isBlank()) {
-			System.out.println("Create Post failed because title is blank");
+			System.out.println("FAILED: Create Post failed because title is blank!");
+			ViewDiscussionHome.numFailed += 1;
 		} else if (content.isBlank()) {
-			System.out.println("Create Post failed because content is blank");
+			System.out.println("FAILED: Create Post failed because content is blank!");
+			ViewDiscussionHome.numFailed += 1;
+		} else {
+			System.out.println("PASSED: Create Post passed!");
+			ViewDiscussionHome.numPassed += 1;
 		}
 	}
 	
