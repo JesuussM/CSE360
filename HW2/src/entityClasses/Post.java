@@ -22,6 +22,7 @@ public class Post {
 	/*
 	 * These are the private attributes for this entity object
 	 */
+	private int id;
     private String author;
     private String title;
     private String content;
@@ -31,7 +32,7 @@ public class Post {
     private Boolean deleted;
     
     /*****
-     * <p> Method: Post(int postId, String author, String content, String thread) </p>
+     * <p> Method: Post(String author, String title String content, String thread) </p>
      * 
      * <p> Description: This constructor is used to establish post objects. </p>
      * 
@@ -55,6 +56,31 @@ public class Post {
         this.replyIds = new ArrayList<>();
         this.deleted = false;
     }
+    
+    /*****
+     * <p> Method: Post(int id, String author, String title, String content, String thread, LocalDateTime timestamp, boolean deleted) </p>
+     * 
+     * <p> Description: This constructor is read from the database. </p>
+     * 
+     * 
+     * @param id specifies the id for this post
+     * @param author specifies the author for this post
+     * @param title specifies the title for this post
+     * @param content specifies the text for this post
+     * @param thread specifies the thread for this post
+     * @param timestamp specifies the timestamp for this post
+     * @param deleted specifies the deletion state of this post
+     * 
+     */
+    public Post(int id, String author, String title, String content, String thread, LocalDateTime timestamp, boolean deleted) {
+    this.id = id;
+    this.author = author;
+    this.title = title;
+    this.content = content;
+    this.thread = thread;
+    this.timestamp = timestamp;
+    this.deleted = deleted;
+}
     
     /*****
      * <p> Method: void addReply(int replyId) </p>

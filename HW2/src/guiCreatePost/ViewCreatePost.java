@@ -1,33 +1,31 @@
-package guiDiscussionHome;
+package guiCreatePost;
 
+import database.Database;
+import entityClasses.User;
+import guiDiscussionHome.ViewDiscussionHome;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import database.Database;
-import entityClasses.User;
-import guiCreatePost.ViewCreatePost;
-import guiUserUpdate.ControllerUserUpdate;
 
 /*******
- * <p> Title: ViewDiscussionHome Class. </p>
+ * <p> Title: ViewCreatePost Class. </p>
  * 
- * <p> Description: The Java/FX-based Discussion Home Page.  This class provides the JavaFX GUI widgets
+ * <p> Description: The Java/FX-based Create Post Page.  This class provides the JavaFX GUI widgets
  * that display the threads and posts within.  
  * 
  * The class has been written using a singleton design pattern and is the View portion of the 
  * Model, View, Controller pattern.  The pattern is designed that the all accesses to this page and
- * its functions starts by invoking the static method displayDiscussionHome.  No other method should 
+ * its functions starts by invoking the static method displayCreatePost.  No other method should 
  * attempt to instantiate this class as that is controlled by displayDiscussionHome.  It ensure that
  * only one instance of class is instantiated and that one is properly configured for each use.  
  * 
@@ -39,7 +37,7 @@ import guiUserUpdate.ControllerUserUpdate;
  *  
  */
 
-public class ViewDiscussionHome {
+public class ViewCreatePost {
 	/*-*******************************************************************************************
 
 	Attributes
@@ -58,26 +56,24 @@ public class ViewDiscussionHome {
 	// and a button to allow this user to update the account settings
 	protected static Label label_PageTitle = new Label();
 	protected static Button button_Return = new Button("Return");
-	protected static Button button_Create = new Button("Create Post");
 
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
 	
-	protected static VBox vbox_ThreadList = new VBox(10);
-	protected static ToggleGroup toggleGroup_Threads = new ToggleGroup();
+	// Title field
+	protected static Label label_Title = new Label();
+	protected static TextField field_Title = new TextField();
 	
-	// This is a separator and it is used to partition the GUI for various tasks
-	private static Line line_Separator2 = new Line(200, 120, 200, height-100);
+	// Content field
+	protected static Label label_Content = new Label();
+	protected static TextArea field_Content = new TextArea();
 	
-	// scrollable pane view to store the posts
-	protected static ScrollPane scroll_PostPane = new ScrollPane();
-	protected static VBox vbox_PostList = new VBox(12);
-	protected static VBox vbox_PostCard = new VBox(10);
-	protected static VBox vbox_PostCardContainer = new VBox(6);
-	protected static HBox hbox_PostTitle = new HBox();
-	protected static Label label_PostTitle = new Label();
-	protected static Label label_PostDetails = new Label();
-	protected static Label label_PostFooter = new Label();
+	// Thread field
+	protected static Label label_Thread = new Label();
+	protected static ComboBox<String> field_Thread = new ComboBox<String>();
+	
+	// Create Button
+	protected static Button button_Create = new Button("Create");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -92,7 +88,7 @@ public class ViewDiscussionHome {
 	// This is the end of the GUI objects for the page.
 	
 	// These attributes are used to configure the page and populate it with this user's information
-	private static ViewDiscussionHome theView;		// Used to determine if instantiation of the class
+	private static ViewCreatePost theView;		// Used to determine if instantiation of the class
 												// is needed
 
 	// Reference for the in-memory database so this package has access
@@ -102,7 +98,7 @@ public class ViewDiscussionHome {
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current logged in User
 
-	private static Scene theDiscussionHomeScene;		// The shared Scene each invocation populates
+	private static Scene theCreatePostScene;		// The shared Scene each invocation populates
 	
 	/*-*******************************************************************************************
 
@@ -111,7 +107,7 @@ public class ViewDiscussionHome {
 	*/
 
 	/**********
-	 * <p> Method: displayDiscussionHome(Stage ps, User user) </p>
+	 * <p> Method: displayCreatePost(Stage ps, User user) </p>
 	 * 
 	 * <p> Description: This method is the single entry point from outside this package to cause
 	 * the Admin Home page to be displayed.
@@ -131,31 +127,22 @@ public class ViewDiscussionHome {
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
-	public static void displayDiscussionHome(Stage ps, User user) {
+	public static void displayCreatePost(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
 		
 		// If not yet established, populate the static aspects of the GUI
-		if (theView == null) theView = new ViewDiscussionHome();		// Instantiate singleton if needed
+		if (theView == null) theView = new ViewCreatePost();		// Instantiate singleton if needed
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
-		
-//		theDatabase.createThread("General");
-//		theDatabase.createThread("Test 1");
-//		theDatabase.createThread("Test 2");
-//		Post post = new Post("jesus", "Test Title", "This is test content text", "General");
-//		theDatabase.createPost(post);
-		
-		// Establish the data when page is opened
-		ControllerDiscussionHome.updateData(theDatabase.getAllThreads(), theDatabase.getAllPosts());
 				
 		// Set the title for the window and display the page
 		theStage.setTitle("CSE 360 Foundation Code: Discussions");
-		theStage.setScene(theDiscussionHomeScene);						// Set this page onto the stage
+		theStage.setScene(theCreatePostScene);						// Set this page onto the stage
 		theStage.show();											// Display it to the user
 	}
 	
@@ -170,66 +157,68 @@ public class ViewDiscussionHome {
 	 * fields using the displayAdminHome method.</p>
 	 * 
 	 */
-	private ViewDiscussionHome() {
+	private ViewCreatePost() {
 
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
-		theDiscussionHomeScene = new Scene(theRootPane, width, height);
+		theCreatePostScene = new Scene(theRootPane, width, height);
 	
 		// Populate the window with the title and other common widgets and set their static state
 		
 		// GUI Area 1
-		label_PageTitle.setText("Discussions");
+		label_PageTitle.setText("Create Post");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
 		label_PageTitle.getStyleClass().addAll("text-bold", "title-2");
 		
 		setupButtonUI(button_Return, "Dialog", 18, 100, Pos.CENTER, 20, 55);
 		button_Return.getStyleClass().addAll("accent", "button-outlined");
 		button_Return.setOnAction((event) -> 
-			{ControllerUserUpdate.goToUserHomePage(theStage, theUser);});
-		
-		setupButtonUI(button_Create, "Dialog", 18, 100, Pos.CENTER, width-140, 55);
-		button_Create.getStyleClass().addAll("success");
-		button_Create.setOnAction((event) -> 
-				{ViewCreatePost.displayCreatePost(theStage, theUser);});
+			{ViewDiscussionHome.displayDiscussionHome(theStage, theUser);});
 		
 		// GUI Area 2
-		vbox_ThreadList.setLayoutX(30);
-		vbox_ThreadList.setLayoutY(140);
-		vbox_ThreadList.setPrefWidth(170);
-		vbox_ThreadList.setPrefHeight(height - 240);
+		label_Title.setText("Title:");
+		setupLabelUI(label_Title, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 125);
+		label_Title.getStyleClass().addAll("text-bold");
+		setupTextUI(field_Title, "Arial", 16, 400, Pos.BASELINE_LEFT, 100, 120, true);
+		field_Title.setPromptText("Enter Title...");
 		
+		label_Content.setText("Text:");
+		setupLabelUI(label_Content, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 165);
+		label_Content.getStyleClass().addAll("text-bold");
+		setupTextAreaUI(field_Content, "Arial", 16, width-150, 100, 160, true);
+		field_Content.setPromptText("Enter Text...");
+		
+		label_Thread.setText("Thread:");
+		setupLabelUI(label_Thread, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 375);
+		label_Thread.getStyleClass().addAll("text-bold");
+		setupComboBoxUI(field_Thread, "Arial", 16, 150, 100, 370);
+		ObservableList<String> threads = FXCollections.observableArrayList(theDatabase.getAllThreads());
+		field_Thread.setItems(threads);
+		field_Thread.getSelectionModel().selectFirst();
+		
+		setupButtonUI(button_Create, "Dialog", 18, 100, Pos.CENTER, width-140, 450);
+		button_Create.getStyleClass().addAll("success");
+		button_Create.setOnAction((event) -> {ControllerCreatePost.createPost(field_Title.getText(), field_Content.getText(), field_Thread.getValue());});
+
 		// GUI Area 3
-		scroll_PostPane.setFitToWidth(true);
-		scroll_PostPane.setFitToHeight(true);
-		scroll_PostPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scroll_PostPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		scroll_PostPane.setLayoutX(220);
-		scroll_PostPane.setLayoutY(120);
-		scroll_PostPane.setPrefWidth(width - 230);
-		scroll_PostPane.setPrefHeight(height - 250);
-		scroll_PostPane.setContent(vbox_PostList);
-		
-		// GUI Area 4
 		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
 		button_Logout.getStyleClass().addAll("danger", "button-outlined");
-		button_Logout.setOnAction((event) -> {ControllerDiscussionHome.performLogout(); });
-    
+		button_Logout.setOnAction((event) -> {ControllerCreatePost.performLogout(); });
+	
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.getStyleClass().addAll("danger");
-		button_Quit.setOnAction((event) -> {ControllerDiscussionHome.performQuit(); });
-
+		button_Quit.setOnAction((event) -> {ControllerCreatePost.performQuit(); });
+	
 		// This is the end of the GUI initialization code
 		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
-			label_PageTitle, button_Return, button_Create, line_Separator1, 
-			line_Separator2, vbox_ThreadList,  
-			scroll_PostPane,
+			label_PageTitle, button_Return, line_Separator1,
+			label_Title, field_Title, label_Content, field_Content, label_Thread, field_Thread, button_Create,
 			line_Separator4, button_Logout, button_Quit
-    		);
+			);
 	}
-	
+		
 	/*-*******************************************************************************************
 
 	Helper methods used to minimizes the number of lines of code needed above
@@ -274,7 +263,6 @@ public class ViewDiscussionHome {
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
 	}
-
 	
 	/**********
 	 * Private local method to initialize the standard fields for a text input field
@@ -282,7 +270,7 @@ public class ViewDiscussionHome {
 	 * @param b		The TextField object to be initialized
 	 * @param ff	The font to be used
 	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
+	 * @param w		The width of the TextField
 	 * @param p		The alignment (e.g. left, centered, or right)
 	 * @param x		The location from the left edge (x axis)
 	 * @param y		The location from the top (y axis)
@@ -297,7 +285,27 @@ public class ViewDiscussionHome {
 		t.setLayoutY(y);		
 		t.setEditable(e);
 	}	
-
+	
+	/**********
+	 * Private local method to initialize the standard fields for a text input field
+	 * 
+	 * @param b		The TextArea object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the TextArea
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 * @param e		Is this TextArea user editable?
+	 */
+	private void setupTextAreaUI(TextArea t, String ff, double f, double w, double x, double y, boolean e){
+		t.setFont(Font.font(ff, f));
+		t.setMinWidth(w);
+		t.setMaxWidth(w);
+		t.setLayoutX(x);
+		t.setLayoutY(y);		
+		t.setEditable(e);
+	}
 	
 	/**********
 	 * Private local method to initialize the standard fields for a ComboBox

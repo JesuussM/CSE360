@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -1447,13 +1448,18 @@ public class Database {
 		String query = "SELECT * FROM postDB";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				output.add(new Post
-							(rs.getString("author"),
-							rs.getString("title"),
-							rs.getString("content"),
-							rs.getString("thread")));
-			}
+			 while (rs.next()) {
+		            int id = rs.getInt("id");
+		            String author = rs.getString("author");
+		            String title = rs.getString("title");
+		            String content = rs.getString("content");
+		            String thread = rs.getString("thread");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean deleted = rs.getBoolean("deleted");
+
+		            Post post = new Post(id, author, title, content, thread, timestamp, deleted);
+		            output.add(post);
+		        }
 		} catch (SQLException e) {
 			System.out.println("getAllPosts error" + e);
 	        return null;
@@ -1478,6 +1484,7 @@ public class Database {
 			pstmt.setString(3, post.getContent());
 			pstmt.setString(4, post.getThread());
 			pstmt.executeUpdate();
+			System.out.println("New Post Created");
 		} catch (SQLException e) {
 			System.out.println("Database.createPost failed " + e);
 		}

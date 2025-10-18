@@ -92,7 +92,7 @@ public class ControllerDiscussionHome {
 			details.setText(String.join("   ", "  ", post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
 			
 			footer.getStyleClass().add("text-small");
-			footer.setText("    3 Replies");
+			footer.setText("      3 Replies");
 			
 			container.getChildren().addAll(title, details, footer);
 			card.getChildren().add(container);
