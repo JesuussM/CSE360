@@ -1601,9 +1601,12 @@ public class Database {
 	 *  
 	 */
 	public void deletePost(int postid) {
-		String query = "DELETE FROM postDB WHERE id = ?";
+		String query = "UPDATE postDB SET title = ?, content = ?, deleted = ? WHERE id = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setInt(1, postid);
+			pstmt.setString(1, "[DELETED]");
+			pstmt.setString(2, "[DELETED]");
+			pstmt.setBoolean(3, true);
+			pstmt.setInt(4, postid);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Database.deletePost failed " + e);

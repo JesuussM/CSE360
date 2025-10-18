@@ -118,7 +118,7 @@ public class ControllerDiscussionHome {
 			
 			container.getChildren().addAll(title, details, footer);
 			// Delete button
-			if (post.getAuthor() == theDatabase.getCurrentUsername()) {
+			if (post.getAuthor() == theDatabase.getCurrentUsername() && !post.isDeleted()) {
 				Button button_Delete = new Button("Delete");
 				button_Delete.getStyleClass().addAll("danger");
 				button_Delete.setMinWidth(100);
