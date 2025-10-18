@@ -1469,6 +1469,40 @@ public class Database {
 	}
 	
 	/*******
+	 * <p> Method: boolean getPostByThread() </p>
+	 * 
+	 * <p> Description: Gets posts by thread</p>
+	 * 
+	 * @param thread		the thread title
+	 * 
+	 * @return list of post objects
+	 *  
+	 */
+	public List<Post> getPostByThread(String thread) {
+		List<Post> output = new ArrayList<>();
+		String query = "SELECT * FROM postDB where thread = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, thread);
+			ResultSet rs = pstmt.executeQuery();
+			 while (rs.next()) {
+				 	int id = rs.getInt("id");
+		            String author = rs.getString("author");
+		            String title = rs.getString("title");
+		            String content = rs.getString("content");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean deleted = rs.getBoolean("deleted");
+
+		            Post post = new Post(id, author, title, content, thread, timestamp, deleted);
+		            output.add(post);
+		        }
+		} catch (SQLException e) {
+			System.out.println("getPostByThread error" + e);
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
 	 * <p> Method: boolean getPostByID() </p>
 	 * 
 	 * <p> Description: Gets single post</p>
