@@ -1,32 +1,33 @@
-package guiCreatePost;
+package guiPostView;
 
 import database.Database;
 import entityClasses.User;
 import guiDiscussionHome.ViewDiscussionHome;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /*******
- * <p> Title: ViewCreatePost Class. </p>
+ * <p> Title: ViewPostView Class. </p>
  * 
- * <p> Description: The Java/FX-based Create Post Page.  This class provides the JavaFX GUI widgets
- * that display the threads and posts within.  
+ * <p> Description: The Java/FX-based Post View Page.  This class provides the JavaFX GUI widgets
+ * that display the posts and replies within.  
  * 
  * The class has been written using a singleton design pattern and is the View portion of the 
  * Model, View, Controller pattern.  The pattern is designed that the all accesses to this page and
- * its functions starts by invoking the static method displayCreatePost.  No other method should 
- * attempt to instantiate this class as that is controlled by displayDiscussionHome.  It ensure that
+ * its functions starts by invoking the static method displayPostView.  No other method should 
+ * attempt to instantiate this class as that is controlled by displayPostView.  It ensure that
  * only one instance of class is instantiated and that one is properly configured for each use.  
  * 
  * Please note that this implementation is not appropriate for concurrent systems with multiple
@@ -37,7 +38,8 @@ import javafx.stage.Stage;
  *  
  */
 
-public class ViewCreatePost {
+public class ViewPostView {
+	
 	/*-*******************************************************************************************
 
 	Attributes
@@ -60,20 +62,20 @@ public class ViewCreatePost {
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
 	
-	// Title field
+	protected static ScrollPane scroll_PostPane = new ScrollPane();
+	protected static VBox vbox_PostList = new VBox(12);
+	protected static VBox vbox_PostCard = new VBox(10);
+	protected static VBox vbox_PostCardContainer = new VBox(6);
+	protected static HBox hbox_PostTitle = new HBox();
+	protected static Button button_PostTitle = new Button();
+	protected static Label label_PostDetails = new Label();
+	protected static Label label_PostFooter = new Label();
 	protected static Label label_Title = new Label();
-	protected static TextField field_Title = new TextField();
-	
-	// Content field
+	protected static Label label_Detail = new Label();
 	protected static Label label_Content = new Label();
-	protected static TextArea field_Content = new TextArea();
-	
-	// Thread field
-	protected static Label label_Thread = new Label();
-	protected static ComboBox<String> field_Thread = new ComboBox<String>();
 	
 	// Create Button
-	protected static Button button_Create = new Button("Create");
+	protected static Button button_Reply = new Button("Reply");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	private static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -88,7 +90,7 @@ public class ViewCreatePost {
 	// This is the end of the GUI objects for the page.
 	
 	// These attributes are used to configure the page and populate it with this user's information
-	private static ViewCreatePost theView;		// Used to determine if instantiation of the class
+	private static ViewPostView theView;		// Used to determine if instantiation of the class
 												// is needed
 
 	// Reference for the in-memory database so this package has access
@@ -98,7 +100,7 @@ public class ViewCreatePost {
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current logged in User
 
-	private static Scene theCreatePostScene;		// The shared Scene each invocation populates
+	private static Scene thePostViewScene;		// The shared Scene each invocation populates
 	
 	/*-*******************************************************************************************
 
@@ -107,7 +109,7 @@ public class ViewCreatePost {
 	*/
 
 	/**********
-	 * <p> Method: displayCreatePost(Stage ps, User user) </p>
+	 * <p> Method: displayPostView(Stage ps, User user) </p>
 	 * 
 	 * <p> Description: This method is the single entry point from outside this package to cause
 	 * the Admin Home page to be displayed.
@@ -127,22 +129,28 @@ public class ViewCreatePost {
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
-	public static void displayCreatePost(Stage ps, User user) {
+	public static void displayPostView(Stage ps, User user, int id) {
 		
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
 		
 		// If not yet established, populate the static aspects of the GUI
-		if (theView == null) theView = new ViewCreatePost();		// Instantiate singleton if needed
+		if (theView == null) theView = new ViewPostView();		// Instantiate singleton if needed
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
+		
+//		Reply reply = new Reply(1, user.getUserName(), "This is a test reply.");
+//		theDatabase.createReply(reply);
+		
+		// TODO: Database call to get post details where id = id
+		ControllerPostView.updateData(theDatabase.getPostByID(id), theDatabase.getRepliesByPostID(id));
 				
 		// Set the title for the window and display the page
-		theStage.setTitle("CSE 360 Foundation Code: Discussions");
-		theStage.setScene(theCreatePostScene);						// Set this page onto the stage
+		theStage.setTitle("CSE 360 Foundation Code: Post");
+		theStage.setScene(thePostViewScene);						// Set this page onto the stage
 		theStage.show();											// Display it to the user
 	}
 	
@@ -154,19 +162,19 @@ public class ViewCreatePost {
 	 * each GUI object.
 	 * 
 	 * This is a singleton and is only performed once.  Subsequent uses fill in the changeable
-	 * fields using the displayCreatePost method.</p>
+	 * fields using the displayPostView method.</p>
 	 * 
 	 */
-	private ViewCreatePost() {
+	private ViewPostView() {
 
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
-		theCreatePostScene = new Scene(theRootPane, width, height);
+		thePostViewScene = new Scene(theRootPane, width, height);
 	
 		// Populate the window with the title and other common widgets and set their static state
 		
 		// GUI Area 1
-		label_PageTitle.setText("Create Post");
+		label_PageTitle.setText("Post");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
 		label_PageTitle.getStyleClass().addAll("text-bold", "title-2");
 		
@@ -176,49 +184,35 @@ public class ViewCreatePost {
 			{ViewDiscussionHome.displayDiscussionHome(theStage, theUser);});
 		
 		// GUI Area 2
-		label_Title.setText("Title:");
-		setupLabelUI(label_Title, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 125);
-		label_Title.getStyleClass().addAll("text-bold");
-		setupTextUI(field_Title, "Arial", 16, 400, Pos.BASELINE_LEFT, 100, 120, true);
-		field_Title.setPromptText("Enter Title...");
-		
-		label_Content.setText("Text:");
-		setupLabelUI(label_Content, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 165);
-		label_Content.getStyleClass().addAll("text-bold");
-		setupTextAreaUI(field_Content, "Arial", 16, width-150, 100, 160, true);
-		field_Content.setPromptText("Enter Text...");
-		
-		label_Thread.setText("Thread:");
-		setupLabelUI(label_Thread, "Arial", 19, width, Pos.BASELINE_LEFT, 20, 375);
-		label_Thread.getStyleClass().addAll("text-bold");
-		setupComboBoxUI(field_Thread, "Arial", 16, 150, 100, 370);
-		ObservableList<String> threads = FXCollections.observableArrayList(theDatabase.getAllThreads());
-		field_Thread.setItems(threads);
-		field_Thread.getSelectionModel().selectFirst();
-		
-		setupButtonUI(button_Create, "Dialog", 18, 100, Pos.CENTER, width-140, 450);
-		button_Create.getStyleClass().addAll("success");
-		button_Create.setOnAction((event) -> {ControllerCreatePost.createPost(field_Title.getText(), field_Content.getText(), field_Thread.getValue());});
+		scroll_PostPane.setFitToWidth(true);
+		scroll_PostPane.setFitToHeight(true);
+		scroll_PostPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scroll_PostPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scroll_PostPane.setLayoutX(20);
+		scroll_PostPane.setLayoutY(120);
+		scroll_PostPane.setPrefWidth(width - 40);
+		scroll_PostPane.setPrefHeight(height - 250);
+		scroll_PostPane.setContent(vbox_PostList);
 
 		// GUI Area 3
 		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
 		button_Logout.getStyleClass().addAll("danger", "button-outlined");
-		button_Logout.setOnAction((event) -> {ControllerCreatePost.performLogout(); });
+		button_Logout.setOnAction((event) -> {ControllerPostView.performLogout(); });
 	
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
 		button_Quit.getStyleClass().addAll("danger");
-		button_Quit.setOnAction((event) -> {ControllerCreatePost.performQuit(); });
+		button_Quit.setOnAction((event) -> {ControllerPostView.performQuit(); });
 	
 		// This is the end of the GUI initialization code
 		
 		// Place all of the widget items into the Root Pane's list of children
 		theRootPane.getChildren().addAll(
 			label_PageTitle, button_Return, line_Separator1,
-			label_Title, field_Title, label_Content, field_Content, label_Thread, field_Thread, button_Create,
+			label_Title, label_Content, scroll_PostPane,
 			line_Separator4, button_Logout, button_Quit
 			);
 	}
-		
+	
 	/*-*******************************************************************************************
 
 	Helper methods used to minimizes the number of lines of code needed above
@@ -323,4 +317,5 @@ public class ViewCreatePost {
 		c.setLayoutX(x);
 		c.setLayoutY(y);
 	}
+
 }

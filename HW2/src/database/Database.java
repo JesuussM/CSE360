@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import entityClasses.Post;
+import entityClasses.Reply;
 import entityClasses.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -1468,6 +1469,39 @@ public class Database {
 	}
 	
 	/*******
+	 * <p> Method: boolean getPostByID() </p>
+	 * 
+	 * <p> Description: Gets single post</p>
+	 * 
+	 * @param id		the id of the post to search
+	 * 
+	 * @return the post object
+	 *  
+	 */
+	public Post getPostByID(int id) {
+		Post post = null;
+		String query = "SELECT * FROM postDB where id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			 while (rs.next()) {
+		            String author = rs.getString("author");
+		            String title = rs.getString("title");
+		            String content = rs.getString("content");
+		            String thread = rs.getString("thread");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean deleted = rs.getBoolean("deleted");
+
+		            post = new Post(id, author, title, content, thread, timestamp, deleted);
+		        }
+		} catch (SQLException e) {
+			System.out.println("getPost error" + e);
+	        return null;
+	    }
+		return post;
+	}
+	
+	/*******
 	 * <p> Method: void createPost(Post post) </p>
 	 * 
 	 * <p> Description: Add a post to postDB</p>
@@ -1487,6 +1521,61 @@ public class Database {
 			System.out.println("New Post Created");
 		} catch (SQLException e) {
 			System.out.println("Database.createPost failed " + e);
+		}
+	}
+	
+	/*******
+	 * <p> Method: boolean getRepliesByPostID() </p>
+	 * 
+	 * <p> Description: Gets all reply objects using post id</p>
+	 * 
+	 * @param id		the id of the post to search
+	 * 
+	 * @return list of Reply objects
+	 *  
+	 */
+	public List<Reply> getRepliesByPostID(int postID) {
+		List<Reply> output = new ArrayList<Reply>();
+		String query = "SELECT * FROM replyDB where postid = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, postID);
+			ResultSet rs = pstmt.executeQuery();
+			 while (rs.next()) {
+				 	int id = rs.getInt("id");
+		            String author = rs.getString("author");
+		            String content = rs.getString("content");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean read = rs.getBoolean("read");
+
+		            Reply reply = new Reply(id, postID, author, content, timestamp, read);
+		            output.add(reply);
+		        }
+		} catch (SQLException e) {
+			System.out.println("getPost error" + e);
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
+	 * <p> Method: void createReply(Reply reply) </p>
+	 * 
+	 * <p> Description: Add a reply to replyDB</p>
+	 * 
+	 * @param a reply object
+	 *  
+	 */
+	public void createReply(Reply reply) {
+		String query = "INSERT INTO replyDB (postid, author, content) "
+				+ "VALUES (?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, reply.getPostId());			
+			pstmt.setString(2, reply.getAuthor());
+			pstmt.setString(3, reply.getContent());
+			pstmt.executeUpdate();
+			System.out.println("New Reply Created");
+		} catch (SQLException e) {
+			System.out.println("Database.createReply failed " + e);
 		}
 	}
 }

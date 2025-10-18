@@ -112,9 +112,9 @@ public class Post {
      * @return an int of id
      * 
      */
-//    public int getId() {
-//        return id;
-//    }
+    public int getId() {
+        return id;
+    }
 
     /*****
      * <p> Method: String getAuthor() </p>

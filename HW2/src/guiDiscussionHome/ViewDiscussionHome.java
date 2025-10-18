@@ -75,7 +75,7 @@ public class ViewDiscussionHome {
 	protected static VBox vbox_PostCard = new VBox(10);
 	protected static VBox vbox_PostCardContainer = new VBox(6);
 	protected static HBox hbox_PostTitle = new HBox();
-	protected static Label label_PostTitle = new Label();
+	protected static Button button_PostTitle = new Button();
 	protected static Label label_PostDetails = new Label();
 	protected static Label label_PostFooter = new Label();
 	

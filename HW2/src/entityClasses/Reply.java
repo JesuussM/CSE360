@@ -1,6 +1,7 @@
 package entityClasses;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /*******
  * <p> Title: Reply Class </p>
@@ -19,7 +20,7 @@ public class Reply {
 	/*
 	 * These are the private attributes for this entity object
 	 */
-    //private int id;
+    private int id;
     private int postId;
     private String author;
     private String content;
@@ -41,8 +42,7 @@ public class Reply {
      * 
      * 
      */
-    public Reply(int id, int postId, String author, String content) {
-        //this.id = id;
+    public Reply(int postId, String author, String content) {
         this.postId = postId;
         this.author = author;
         this.content = content;
@@ -50,7 +50,31 @@ public class Reply {
         this.read = false;
     }
     
+    
     /*****
+     * <p> Method: Reply(int id, int postID, String author, String content, LocalDateTime timestamp, boolean read) </p>
+     * 
+     * <p> Description: This constructor is read from the database. </p>
+     * 
+     * 
+     * @param id specifies the id for this reply
+     * @param postID specifies the post for this reply
+     * @param author specifies the author for this reply
+     * @param content specifies the text for this reply
+     * @param timestamp specifies the timestamp for this reply
+     * @param read specifies the read state of this reply
+     * 
+     */
+    public Reply(int id, int postID, String author, String content, LocalDateTime timestamp, boolean read) {
+		this.id = id;
+		this.postId = postID;
+		this.author = author;
+		this.content = content;
+		this.timestamp = timestamp;
+		this.read = read;
+	}
+
+	/*****
      * <p> Method: void markRead() </p>
      * 
      * <p> Description: This method is used to mark a post as read. </p>
@@ -68,9 +92,9 @@ public class Reply {
      * @return an int of reply id
      * 
      */
-//    public int getId() {
-//        return id;
-//    }
+    public int getId() {
+        return id;
+    }
     
     /*****
      * <p> Method: String getPostId() </p>
@@ -116,8 +140,9 @@ public class Reply {
      * @return a LocalDateTime of timestamp
      * 
      */
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getTimestamp() {
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy hh:mm a");
+        return timestamp.format(formatter);
     }
     
     /*****

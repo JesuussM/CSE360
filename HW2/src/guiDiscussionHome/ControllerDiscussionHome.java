@@ -4,13 +4,13 @@ import java.util.List;
 
 import database.Database;
 import entityClasses.Post;
-import javafx.geometry.Insets;
+import guiPostView.ViewPostView;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 /*******
  * <p> Title: ControllerDiscussionHome Class. </p>
  * 
@@ -70,29 +70,32 @@ public class ControllerDiscussionHome {
 		ViewDiscussionHome.vbox_PostCard = new VBox();
 		
 		for (Post post : posts) {
+			int id = post.getId();
 			VBox card = new VBox(10);
 			VBox container = new VBox(6);
 			HBox header = new HBox();
-			Label title = new Label();
+			Button title = new Button();
 			Label details = new Label();
 			Label footer = new Label();
 			card.getStyleClass().add("card");
-			container.setPadding(new Insets(6,8,6,20));
+			card.setStyle("-fx-padding: 12 20 12 20;");
 			card.setPrefWidth(200);
 			card.prefWidthProperty().bind(ViewDiscussionHome.vbox_PostList.widthProperty().subtract(20));
 			container.getStyleClass().add("container");
-			container.setPadding(new Insets(6,8,6,20));
+			container.setStyle("-fx-padding: 16 24 16 24;");
+			container.setSpacing(8);
 			
 			header.getStyleClass().add("header");
-			title.getStyleClass().add("title-3");
-			title.setText("   " + post.getTitle());
+			title.getStyleClass().addAll("button", "flat", "large", "accent");
+			title.setText(post.getTitle());
+			title.setOnAction((event) -> {ViewPostView.displayPostView(ViewDiscussionHome.theStage, ViewDiscussionHome.theUser, id); });
 			header.getChildren().add(title);
 			
 			details.getStyleClass().add("text-caption");
-			details.setText(String.join("   ", "  ", post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
+			details.setText(String.join(" | ",post.getThread(), post.getAuthor(), post.getTimestamp().toString()));
 			
 			footer.getStyleClass().add("text-small");
-			footer.setText("      3 Replies");
+			footer.setText("3 Replies");
 			
 			container.getChildren().addAll(title, details, footer);
 			card.getChildren().add(container);
