@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -153,7 +154,7 @@ public class ViewDiscussionHome {
 		
 //		theDatabase.createThread("General");
 //		theDatabase.createThread("Test 1");
-//		theDatabase.createThread("Test 2");
+//		theDatabase.createThread("All");
 //		Post post = new Post("jesus", "Test Title", "This is test content text", "General");
 //		theDatabase.createPost(post);
 		
@@ -166,12 +167,12 @@ public class ViewDiscussionHome {
 		System.out.println("____________________________________________________________________________");
 		System.out.println("\nTesting Automation");
 		
-		ControllerCreatePost.validatePostTest("Test", "");
-		ControllerCreatePost.validatePostTest("", "Test");
-		ControllerCreatePost.validatePostTest("Test", "Test");
+		ControllerCreatePost.validatePostTest("Test", ""); // should fail
+		ControllerCreatePost.validatePostTest("", "Test"); // should fail
+		ControllerCreatePost.validatePostTest("Test", "Test"); // should pass
 		
-		ReplyDialog.validateReplyTest("");
-		ReplyDialog.validateReplyTest("Test");
+		ReplyDialog.validateReplyTest(""); // should fail
+		ReplyDialog.validateReplyTest("Test"); // should pass
 		
 		System.out.println("____________________________________________________________________________");
 		System.out.println();
@@ -217,10 +218,32 @@ public class ViewDiscussionHome {
 		setupToggleUI(toggle_MyPosts, "Dialog", 18, 100, Pos.CENTER, width-300, 55);
 		toggle_MyPosts.setSelected(false);
 		toggle_MyPosts.setOnAction(event -> {
+			RadioButton selectedThread = (RadioButton) toggleGroup_Threads.getSelectedToggle();
+			String thread;
+			if (selectedThread != null) {
+				thread = selectedThread.getText();
+			} else {
+				thread = null;
+			}
+			
 		    if (toggle_MyPosts.isSelected()) {
-		       ControllerDiscussionHome.updatePosts(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
+		    	if (thread == null || thread == "All") {
+		    		System.out.println("Posts are filtered only by username" + thread);
+		    		ControllerDiscussionHome.updatePosts(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
+		    	} else {
+		    		System.out.println("Posts are filtered by username and thread: " + thread);
+		    		System.out.println("Thread: " + thread);
+		    		ControllerDiscussionHome.updatePosts(theDatabase.getPostByAuthorAndThread(
+		    				theDatabase.getCurrentUsername(), thread));
+		    	}
 		    } else {
-		    	ControllerDiscussionHome.updatePosts(theDatabase.getAllPosts());
+		    	if (thread == null || thread == "All") {
+		    		System.out.println("Posts have no filtering");
+		    		ControllerDiscussionHome.updatePosts(theDatabase.getAllPosts());
+		    	} else {
+		    		System.out.println("Posts filted by thread: " + thread);
+		    		ControllerDiscussionHome.updatePosts(theDatabase.getPostByThread(thread));		    		
+		    	}
 		    }
 		});
 		

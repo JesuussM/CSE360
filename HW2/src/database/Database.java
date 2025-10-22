@@ -1437,6 +1437,24 @@ public class Database {
 	}
 	
 	/*******
+	 * <p> Method: void deleteThread(int threadId) </p>
+	 * 
+	 * <p> Description: Deletes a thread</p>
+	 * 
+	 * @param threadId		the id of the thread
+	 *  
+	 */
+	public void deleteThread(int threadId) {
+		String query = "DELETE FROM threadDB WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, threadId);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("****Database.deleteThread failed " + e);
+		}
+	}
+	
+	/*******
 	 * <p> Method: boolean getAllPostsDetails() </p>
 	 * 
 	 * <p> Description: Gets all posts</p>
@@ -1564,6 +1582,41 @@ public class Database {
 		        }
 		} catch (SQLException e) {
 			System.out.println("getPostByAuthor error" + e);
+	        return null;
+	    }
+		return output;
+	}
+	
+	/*******
+	 * <p> Method: boolean getPostByAuthorAndThread() </p>
+	 * 
+	 * <p> Description: Gets posts by author and thread</p>
+	 * 
+	 * @param author		the string author
+	 * @param theead		the category of posts
+	 * 
+	 * @return list of post objects
+	 *  
+	 */
+	public List<Post> getPostByAuthorAndThread(String author, String thread) {
+		List<Post> output = new ArrayList<>();
+		String query = "SELECT * FROM postDB WHERE author = ? AND thread = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, author);
+			pstmt.setString(2, thread);
+			ResultSet rs = pstmt.executeQuery();
+			 while (rs.next()) {
+				 	int id = rs.getInt("id");
+		            String title = rs.getString("title");
+		            String content = rs.getString("content");
+		            LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+		            boolean deleted = rs.getBoolean("deleted");
+
+		            Post post = new Post(id, author, title, content, thread, timestamp, deleted);
+		            output.add(post);
+		        }
+		} catch (SQLException e) {
+			System.out.println("getPostByAuthorAndThread error" + e);
 	        return null;
 	    }
 		return output;

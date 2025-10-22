@@ -62,6 +62,15 @@ public class ControllerDiscussionHome {
 		ViewDiscussionHome.vbox_ThreadList.getChildren().clear();
 		ViewDiscussionHome.toggleGroup_Threads = new ToggleGroup();
 		
+		// Always have and All radio button
+		RadioButton all = new RadioButton("All");
+		all.setSelected(true);
+		all.setWrapText(true);
+		all.setToggleGroup(ViewDiscussionHome.toggleGroup_Threads);
+		all.setOnAction(e -> updateSelectedThread(all));
+		all.setMinWidth(ViewDiscussionHome.vbox_ThreadList.getPrefWidth() - 20);
+		ViewDiscussionHome.vbox_ThreadList.getChildren().add(all);
+		
 		for (String title : threads) {
 			RadioButton rb = new RadioButton(title);
 			rb.setWrapText(true);
@@ -158,9 +167,29 @@ public class ControllerDiscussionHome {
 	 */
 	private static void updateSelectedThread(RadioButton selected) {
 		if (selected != null && selected.isSelected()) {
-			String selectedTitle = selected.getText();
-			System.out.println("Selected discussion: " + selectedTitle);
-			updatePosts(theDatabase.getPostByThread(selectedTitle));
+			String selectedThread = selected.getText();
+			
+			if (selectedThread == "All") {
+				if (ViewDiscussionHome.toggle_MyPosts.isSelected()) {
+					System.out.println("Selected discussion: " + selectedThread);
+					System.out.println("Own Posts is selected");
+					updatePosts(theDatabase.getPostByAuthor(theDatabase.getCurrentUsername()));
+				} else {
+					System.out.println("Selected discussion: " + selectedThread);
+					System.out.println("Own Posts is not selected");
+					updatePosts(theDatabase.getAllPosts());
+				}
+			} else {
+				if (ViewDiscussionHome.toggle_MyPosts.isSelected()) {
+					System.out.println("Selected discussion: " + selectedThread);
+					System.out.println("Own Posts is selected");
+					updatePosts(theDatabase.getPostByAuthorAndThread(theDatabase.getCurrentUsername(), selectedThread));				
+				} else {
+					System.out.println("Selected discussion: " + selectedThread);
+					System.out.println("Own Posts is not selected");
+					updatePosts(theDatabase.getPostByThread(selectedThread));		
+				}
+			}
 		}
 	}
 	

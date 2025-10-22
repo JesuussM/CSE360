@@ -142,10 +142,6 @@ public class ViewPostView {
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
 		
-//		Reply reply = new Reply(1, user.getUserName(), "This is a test reply.");
-//		theDatabase.createReply(reply);
-		
-		// TODO: Database call to get post details where id = id
 		ControllerPostView.updateData(theDatabase.getPostByID(id), theDatabase.getRepliesByPostID(id));
 				
 		// Set the title for the window and display the page
